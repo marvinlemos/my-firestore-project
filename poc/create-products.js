@@ -11,13 +11,16 @@ const db = admin.firestore()
 const cat = '1ysjzKyovlH8hUDtiTQF'
 const catRef = db.collection('categories').doc(cat)
 
-const doc = db.collection('products').doc()
-doc
-  .set({
-    product: 'Something',
-    categories: [catRef],
-    price: 3.10
-  })
-  .then(snap => {
-    console.log(snap)
-  })
+
+const create = async () => {
+  const docRef = db.collection('products').doc()
+  await docRef
+    .set({
+      product: 'Nintendo Switch',
+      categories: [catRef],
+      price: 2999
+    })
+  console.log(docRef.id)
+}
+
+create()

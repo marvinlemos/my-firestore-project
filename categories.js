@@ -1,8 +1,14 @@
 const { doc } = require('./firestore')
 const db = require('./firestore')
 
+const COLLECTION = 'categories'
+
+const getCollection = () => {
+    return db.collection(COLLECTION)
+}
+
 const findAll = async () => {
-    const categoriesDB = await db.collection('categories').get()
+    const categoriesDB = await getCollection().get()
     if (categoriesDB.empty) {
         return []
     }
@@ -19,23 +25,22 @@ const findAll = async () => {
 
 
 const remove = async (id) => {
-    const doc = db.collection('categories').doc(id)
+    const doc = getCollection().doc(id)
     await doc.delete()
 }
 
 const create = async (data) => {
-    const doc = db.collection('categories').doc()
+    const doc = getCollection().doc()
     await doc.set(data)
 }
 
 const update = async (id, data) => {
-    const doc = db.collection('categories').doc(id)
+    const doc = getCollection().doc(id)
     await doc.update(data)
 }
 
 const paginate = async ({ pageSize = 10, startAfter = '' }) => {
-    const categoriesDB = await db
-        .collection('categories')
+    const categoriesDB = await getCollection()
         .orderBy('category')
         .limit(pageSize + 1)
         .startAfter(startAfter)
@@ -64,7 +69,7 @@ const paginate = async ({ pageSize = 10, startAfter = '' }) => {
         data: categories,
         total: categories.length,
         hasNext: total > pageSize,
-        startAfter: total > pageSize ? categories[categories.length-1].category : ''
+        startAfter: total > pageSize ? categories[categories.length - 1].category : ''
     }
 }
 
